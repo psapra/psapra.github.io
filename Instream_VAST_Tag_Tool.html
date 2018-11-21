@@ -9,12 +9,13 @@
 	body {
 	    font: 16px arial, serif;
 	    width: 350px;
-	    height: 300px;
+	    height: 100px;
 	    margin: 0px auto;
 	    vertical-align: middle;
-	    padding-top: 50px;
+	    padding-top: 10px;
 	    font-family: -apple-system, BlinkMacSystemFont, Roboto, Arial, Helvetica, sans-serif;
 	        color: #4b4f56;
+
 	}
 	
 	button
@@ -31,6 +32,7 @@
 	textarea {
 	    width: 300px;
 	    height: 100px;
+
 	    background-color: #e9ebee;
 	}
 
@@ -148,10 +150,10 @@ function clearForm()
 
 </head>
 <body>
-<div style=" background-color: #444950;  color: #fff;">
+<div style=" background-color: #444950;  color: #fff; ">
 <h2 class="dropmenu">In-stream video VAST tool</h2>
 </div >
-<div >
+<div  style=" padding-bottom: -1ß0px;">
 <form name="vast">
 	<p>
 	<h3>Mediation Partner</h3>
@@ -169,21 +171,22 @@ function clearForm()
 	</p>
 	
 	<p>
-	<div id="bundleidblock" style="border: none !important;  position: relative; left: -20px;">
+	<div id="bundleidblock" style="border: none !important;  position: relative; left: -20px;  top: -20px">
 	<h3>App Bundle ID</h3>
 		<input type="text" id="bid"  style="width: 200px;"  name="bid" value=""><br>
 	</div>
 	</p>
 
 <p>
-	<div id="maxAdDurationblock" style="border: none !important; position: relative; left: -20px;">
+	<div id="maxAdDurationblock" style="border: none !important; position: relative; left: -20px; top: -40px">
 	<h3 >Max Ad Duration(ms)</h3>
 		<input type="text" id="maxaddurationms" style="width: 200px;  " name="maxaddurationms" value=""><br>
 	</div>
 	</p>
 
 	<input type="button" class="button" Value="Create Tag" 
-	style="box-sizing: border-box;
+	style=" top: -40px;
+	box-sizing: border-box;
 	    background-color: #4267b2;
     border-color: #4267b2;
     color: #fff;
@@ -211,6 +214,7 @@ function clearForm()
     vertical-align: middle;" 
 	    onclick="validate()" class="cls_submitButton"> <input type="button" class="button" Value="Reset" 
 	    onclick="clearForm()" style="
+    top: -40px;
     background-color: #f5f6f7;
     border-color: #ccd0d5;
     color: #4b4f56;
@@ -233,8 +237,9 @@ function clearForm()
     height: 20px;
     vertical-align: middle;
 	    "><BR>
+	   <textarea id = "finalURL" style="top: -60px;" readonly></textarea>
+ 
 </form>
-<textarea id = "finalURL" readonly></textarea>
 </div>
 </body>
 </html>
