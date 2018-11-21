@@ -1,0 +1,240 @@
+<html>
+<head>
+<title>AN Instream Video VAST tag Tool</title>
+
+<meta name = "viewport" content = "width = 1280, initial-scale = 1.0, user-scalable = no">
+<title></title>
+
+<style>
+	body {
+	    font: 16px arial, serif;
+	    width: 350px;
+	    height: 300px;
+	    margin: 0px auto;
+	    vertical-align: middle;
+	    padding-top: 50px;
+	    font-family: -apple-system, BlinkMacSystemFont, Roboto, Arial, Helvetica, sans-serif;
+	        color: #4b4f56;
+	}
+	
+	button
+	{
+    
+    box-sizing: border-box;
+    padding: 2px 6px 3px;
+    border-width: 2px;
+    border-style: outset;
+   
+    border-image: initial;
+	}
+
+	textarea {
+	    width: 300px;
+	    height: 100px;
+	    background-color: #e9ebee;
+	}
+
+	div {
+    	border: 1px solid #000000;
+    	padding: 5px 20px 20px 20px; 
+	}
+</style>
+
+<script>
+
+function validate() 
+{
+	pid = document.vast.pid.value;
+	bid = document.vast.bid.value;
+	maxaddurationms = document.vast.maxaddurationms.value;
+	function isNumeric(n) {
+  		return !isNaN(parseFloat(n)) && isFinite(n);
+	}
+
+	if (document.getElementById('partner').value == "DFP" || document.getElementById('partner').value == "FreeWheel" ) 
+	{
+		if (pid=="")
+		{
+			alert("Placement id is required for " + document.getElementById('partner').value);
+			document.vast.pid.focus() ;
+			return false;
+		}
+
+		if (bid=="")
+		{
+			alert("Bundle id is required for " + document.getElementById('partner').value);
+			document.vast.bid.focus() ;
+			return false;
+		}
+	}
+
+	if (maxaddurationms!="" && (isNumeric(maxaddurationms) == false))
+	{
+		alert("Please provide a numeric value(in milliseconds) for Max Ad Duration. ")
+		document.vast.maxaddurationms.focus() ;
+		return false;
+	}
+	
+
+	return createUrl();
+	
+}
+
+function createUrl()
+{
+	
+	var finalURL ="https://an.facebook.com/v1/instream/vast.xml?placementid=PLACEMENT_ID_OF_PUBLISHER&measurementsource=mp&bundleid=Bundle_ID&maxaddurationms=maxaddurationms_macro&advertisingid=advertising_id_macro&pageurl=pageURL_macro";
+	
+		
+	pid = document.vast.pid.value;
+	bid = document.vast.bid.value;
+	maxaddurationms = document.vast.maxaddurationms.value;
+	if (maxaddurationms=="")
+		maxaddurationms = 16000;
+
+// if selected partner is DFP
+	if (document.getElementById('partner').value == "DFP")  {
+
+	  var urlMap = {
+	  'PLACEMENT_ID_OF_PUBLISHER':pid,
+	  'advertising_id_macro':'%%ADVERTISING_IDENTIFIER_PLAIN%%',	 
+	  'Bundle_ID':bid,
+	  'pageURL_macro': '%%REFERRER_URL_ESC_ESC%%',
+	  "maxaddurationms_macro": maxaddurationms
+	};
+	var urlPartner = new RegExp(Object.keys(urlMap).join("|"),"gi");
+	finalURL = finalURL.replace(urlPartner, function(matched){
+	//	alert(finalURL);
+	  return urlMap[matched.toString()];
+	});
+}  // DFP case ends Here
+
+// if selected partner is FreeWheel
+	if (document.getElementById('partner').value == "FreeWheel")  {
+
+	  var urlMap = {
+	  'PLACEMENT_ID_OF_PUBLISHER':pid,
+	  'advertising_id_macro':'%%ADVERTISING_IDENTIFIER_PLAIN%%',	 
+	  'Bundle_ID':bid,
+	  'pageURL_macro': '#e{request.pageUrl}',
+	  "maxaddurationms_macro": maxaddurationms
+	};
+	var urlPartner = new RegExp(Object.keys(urlMap).join("|"),"gi");
+	finalURL = finalURL.replace(urlPartner, function(matched){
+	//	alert(finalURL);
+	  return urlMap[matched.toString()];
+	});
+}  // DFP case ends Here
+
+
+	document.getElementById("finalURL").value=finalURL;
+		
+}
+
+function OnPartnerSelected()
+{
+	clearForm();
+}
+
+function clearForm()
+{
+	document.getElementById('finalURL').value="";
+  document.getElementById('pid').value ="";
+  document.getElementById('bid').value ="";
+  document.getElementById('maxaddurationms').value ="";
+}
+
+</script>
+
+</head>
+<body>
+<div style=" background-color: #444950;  color: #fff;">
+<h2 class="dropmenu">In-stream video VAST tool</h2>
+</div >
+<div >
+<form name="vast">
+	<p>
+	<h3>Mediation Partner</h3>
+		<select id="partner" onchange="OnPartnerSelected()">
+  			<option value="DFP">DFP</option>
+  			<option value="FreeWheel">FreeWheel</option>
+		</select>
+	</p>
+
+	<p>
+	<div id="placementblock" style="border: none !important; position: relative; left: -20px;">
+	<h3 >Facebook Placement ID</h3>
+		<input type="text" id="pid"  style="width: 200px;"  name="pid" value=""><br>
+	</div>
+	</p>
+	
+	<p>
+	<div id="bundleidblock" style="border: none !important;  position: relative; left: -20px;">
+	<h3>App Bundle ID</h3>
+		<input type="text" id="bid"  style="width: 200px;"  name="bid" value=""><br>
+	</div>
+	</p>
+
+<p>
+	<div id="maxAdDurationblock" style="border: none !important; position: relative; left: -20px;">
+	<h3 >Max Ad Duration(ms)</h3>
+		<input type="text" id="maxaddurationms" style="width: 200px;  " name="maxaddurationms" value=""><br>
+	</div>
+	</p>
+
+	<input type="button" class="button" Value="Create Tag" 
+	style="box-sizing: border-box;
+	    background-color: #4267b2;
+    border-color: #4267b2;
+    color: #fff;
+    padding: 2px 6px 3px;
+    border-width: 2px;
+    border-style: outset;
+    border-image: initial;
+        transition: 200ms cubic-bezier(.08,.52,.52,1) background-color, 200ms cubic-bezier(.08,.52,.52,1) box-shadow, 200ms cubic-bezier(.08,.52,.52,1) transform;
+    font: 400 11px system-ui;
+        border: 1px solid;
+    border-radius: 2px;
+    box-sizing: content-box;
+    font-size: 12px;
+    -webkit-font-smoothing: antialiased;
+    font-weight: bold;
+    justify-content: center;
+    padding: 0 8px;
+    position: relative;
+    text-align: center;
+    text-shadow: none;
+    vertical-align: middle;
+        content: '';
+    display: inline-block;
+    height: 20px;
+    vertical-align: middle;" 
+	    onclick="validate()" class="cls_submitButton"> <input type="button" class="button" Value="Reset" 
+	    onclick="clearForm()" style="
+    background-color: #f5f6f7;
+    border-color: #ccd0d5;
+    color: #4b4f56;
+        transition: 200ms cubic-bezier(.08,.52,.52,1) background-color, 200ms cubic-bezier(.08,.52,.52,1) box-shadow, 200ms cubic-bezier(.08,.52,.52,1) transform;
+            border: 1px solid;
+    border-radius: 2px;
+    box-sizing: content-box;
+    font-size: 12px;
+    -webkit-font-smoothing: antialiased;
+    font-weight: bold;
+    justify-content: center;
+    padding: 0 8px;
+    position: relative;
+    text-align: center;
+    text-shadow: none;
+    vertical-align: middle;
+        margin-right: 4px;
+            content: '';
+    display: inline-block;
+    height: 20px;
+    vertical-align: middle;
+	    "><BR>
+</form>
+<textarea id = "finalURL" readonly></textarea>
+</div>
+</body>
+</html>
